@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
+import { Divider } from 'react-native-paper';
 
 const ChatBotScreen = () => {
   const [inputText, setInputText] = useState('');
@@ -61,8 +62,10 @@ const ChatBotScreen = () => {
         {chatResults.map((result, index) => (
           <Text key={index} style={styles.chatText}>
             {result}
+            <Divider/>
           </Text>
         ))}
+        
       </ScrollView>
 
       <View style={styles.inputContainer}>
