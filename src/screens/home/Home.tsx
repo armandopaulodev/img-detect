@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Button, Text } from 'react-native-paper';
+import { Button, Text, ActivityIndicator, MD2Colors } from 'react-native-paper';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 import * as Progress from 'react-native-progress';
@@ -67,6 +67,7 @@ const HomeScreen = () => {
       setLoading(false)
     } catch (error) {
       console.error(error);
+      setLoading(false)
     }
   };
 
@@ -74,10 +75,10 @@ const HomeScreen = () => {
 
     const roundedValue = parseFloat(item.confidence.toFixed(1));
     return (<>
-       <Text>
-          <Text>{item.label}</Text>
-          <Progress.Bar progress={roundedValue} width={100} />
-       </Text>
+      <Text>
+        <Text>{item.label}</Text>
+        <Progress.Bar progress={roundedValue} width={100} />
+      </Text>
     </>)
   }
   return (
@@ -90,15 +91,20 @@ const HomeScreen = () => {
           {imageUri && <Image source={{ uri: imageUri }} style={{ width: 250, height: 350 }} />}
         </View>
 
-        <View>
-          {responseData?.google.items.map((item: { 'label': '', 'confidence': number }, index: number) => (
-            <View key={index}>
-              {
-                ResponseViwer(item)
-              }
+
+        {
+          loading ? <ActivityIndicator animating={true} color={MD2Colors.red800} size={'large'} /> :
+            <View>
+              {responseData?.google.items.map((item: { 'label': '', 'confidence': number }, index: number) => (
+                <View key={index}>
+                  {
+                    ResponseViwer(item)
+                  }
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
+        }
+
         <Button icon="camera" mode="contained" onPress={handleLoadImage}>
           Carregar Imagem
         </Button>

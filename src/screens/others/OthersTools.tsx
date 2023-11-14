@@ -4,16 +4,16 @@ import { Card, Title, Paragraph, IconButton } from 'react-native-paper';
 
 const toolsData = [
   { title: 'Gerador de imagem', icon: 'image', route:'img' },
-  { title: 'ChatBot', icon: 'chat' },
-  { title: 'Greador de codigo', icon: 'code-tags' },
+  { title: 'ChatBot', icon: 'chat', route:'chat' },
+  { title: 'Greador de codigo', icon: 'code-tags', route:'code' },
   // Add more tools as needed
 ];
 
-const OthersToolsScreen = () => {
+const OthersToolsScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       {toolsData.map((tool, index) => (
-        <Card key={index} style={styles.card}>
+        <Card key={index} style={styles.card} onPress={()=>navigation.navigate(tool.route)}>
           <Card.Content style={styles.cardContent}>
             <IconButton icon={tool.icon} size={40} />
             <Title style={{ fontSize:15 }}>{tool.title}</Title>
