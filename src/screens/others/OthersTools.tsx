@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Card, Title, Paragraph, IconButton } from 'react-native-paper';
 
 const toolsData = [
-  { title: 'Gerador de imagem', icon: 'image' },
+  { title: 'Gerador de imagem', icon: 'image', route:'img' },
   { title: 'ChatBot', icon: 'chat' },
   { title: 'Greador de codigo', icon: 'code-tags' },
   // Add more tools as needed
