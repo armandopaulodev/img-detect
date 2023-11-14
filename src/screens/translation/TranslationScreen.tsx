@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text,  StyleSheet } from 'react-native';
 import axios from 'axios';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Button, TextInput, } from 'react-native-paper';
 
 interface TranslationScreenProps { }
 
@@ -69,7 +70,10 @@ const TranslationScreen: React.FC<TranslationScreenProps> = () => {
             />
 
             <View style={styles.buttonContainer}>
-                <Button onPress={handleTranslate} title="Traduzir Agora" />
+
+                <Button icon="translate" mode="contained" onPress={handleTranslate}>
+                    Traduzir Agora
+                </Button>
             </View>
 
             {translatedText !== null ? (
