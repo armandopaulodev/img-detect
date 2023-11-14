@@ -4,9 +4,10 @@ import { ScrollView, StyleSheet } from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Button, Text, ProgressBar, MD3Colors } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
+import * as Progress from 'react-native-progress';
 
 
 
@@ -34,7 +35,7 @@ const HomeScreen = () => {
 
   };
 
-  const objectDetection = async (item: any) => {
+  const objectDetection = async () => {
     try {
       const formData = new FormData();
       formData.append('show_original_response', 'false');
@@ -75,7 +76,7 @@ const HomeScreen = () => {
     return (<>
        <Text>
           <Text>{item.label}</Text>
-          <Text>{roundedValue}</Text>
+          <Progress.Bar progress={roundedValue} width={100} />
        </Text>
     </>)
   }
@@ -91,11 +92,13 @@ const HomeScreen = () => {
 
         <View>
           {responseData?.google.items.map((item: { 'label': '', 'confidence': number }, index: number) => (
-            ResponseViwer(item)
+            <View key={index}>
+              {
+                ResponseViwer(item)
+              }
+            </View>
           ))}
-
         </View>
-
         <Button icon="camera" mode="contained" onPress={handleLoadImage}>
           Carregar Imagem
         </Button>
