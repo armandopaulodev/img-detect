@@ -28,7 +28,7 @@ export default function RouterProvider() {
                
             >
                 <Tab.Screen name="Home" options={{ title: 'Detencao de imagem' }} component={HomeScreen} />
-                <Tab.Screen name="Traducao" component={TranslationScreen} />
+                <Tab.Screen name="Traducao" options={{ title:'Tradutor' }} component={TranslationScreen} />
             </Tab.Navigator>
         </NavigationContainer>
 

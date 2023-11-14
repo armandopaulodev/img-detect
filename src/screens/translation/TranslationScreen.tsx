@@ -7,8 +7,8 @@ interface TranslationScreenProps { }
 
 const TranslationScreen: React.FC<TranslationScreenProps> = () => {
     const [inputText, setInputText] = useState<string>('');
-    const [translatedText, setTranslatedText] = useState({'microsoft':{'text':''}});
-   
+    const [translatedText, setTranslatedText] = useState({ 'microsoft': { 'text': '' } });
+
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [targetLanguage, setTargetLanguage] = useState([
@@ -17,22 +17,22 @@ const TranslationScreen: React.FC<TranslationScreenProps> = () => {
     ]);
 
     const handleTranslate = () => {
-      
+
         const options = {
             method: "POST",
             url: "https://api.edenai.run/v2/translation/automatic_translation",
             headers: {
-              authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNzI5YzUxZDItN2Q5Mi00NGJjLWJhMmUtNDE5YTQ5OWJiMTMxIiwidHlwZSI6ImFwaV90b2tlbiJ9.tUBopYrgHyPFkigL5s9_qhqmLKLj_7NOuvlDZOQt188",
+                authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNzI5YzUxZDItN2Q5Mi00NGJjLWJhMmUtNDE5YTQ5OWJiMTMxIiwidHlwZSI6ImFwaV90b2tlbiJ9.tUBopYrgHyPFkigL5s9_qhqmLKLj_7NOuvlDZOQt188",
             },
             data: {
-              show_original_response: false,
-              fallback_providers: "",
-              providers: "amazon,google,ibm,microsoft",
-              text: inputText,
-              source_language: "pt",
-              target_language: value,
+                show_original_response: false,
+                fallback_providers: "",
+                providers: "amazon,google,ibm,microsoft",
+                text: inputText,
+                source_language: "pt",
+                target_language: value,
             },
-          };
+        };
 
         axios
             .request(options)
@@ -47,15 +47,17 @@ const TranslationScreen: React.FC<TranslationScreenProps> = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Enter Text to Translate:</Text>
+            <Text style={styles.label}>Escreva um texto (pt):</Text>
             <TextInput
-                style={styles.input}
+                style={styles.textArea}
                 onChangeText={setInputText}
                 value={inputText}
-                placeholder="Type here..."
+                multiline
+                numberOfLines={4}
+                placeholder="Digite aqui..."
             />
 
-            <Text style={styles.label}>Select Target Language:</Text>
+            <Text style={styles.label}>Traduzir para:</Text>
             <DropDownPicker
                 open={open}
                 value={value}
@@ -63,15 +65,16 @@ const TranslationScreen: React.FC<TranslationScreenProps> = () => {
                 setOpen={setOpen}
                 setValue={setValue}
                 setItems={setTargetLanguage}
+                placeholder='indique a lingua Destino'
             />
 
             <View style={styles.buttonContainer}>
-                <Button onPress={handleTranslate} title="Translate" />
+                <Button onPress={handleTranslate} title="Traduzir Agora" />
             </View>
 
-            {translatedText!==null ? (
-                <View>
-                    <Text style={styles.label}>Translated Text:</Text>
+            {translatedText !== null ? (
+                <View style={{ marginTop: 10, backgroundColor: '#f8fafc', padding: 16, minHeight: 300 }}>
+                    <Text style={styles.label}>Resultado (Usando EdenAi 😍)</Text>
                     <Text>{translatedText.microsoft.text}</Text>
                 </View>
             ) : null}
@@ -87,6 +90,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 18,
         marginBottom: 8,
+        fontWeight: 'bold'
     },
     input: {
         height: 40,
@@ -95,9 +99,17 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         paddingHorizontal: 8,
     },
+    textArea: {
+        height: 100, // Set the desired height for the textarea
+        borderColor: '#d4d4d4',
+        borderWidth: 1,
+        marginBottom: 16,
+        paddingHorizontal: 8,
+        paddingTop: 8, // Add some padding at the top for better appearance
+    },
     buttonContainer: {
         marginTop: 16,
-      },
+    },
 });
 
 export default TranslationScreen;
