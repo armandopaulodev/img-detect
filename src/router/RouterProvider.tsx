@@ -3,6 +3,7 @@ import HomeScreen from '../screens/home/Home';
 import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import TranslationScreen from '../screens/translation/TranslationScreen';
+import OthersToolsScreen from '../screens/others/OthersTools';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,6 +19,8 @@ export default function RouterProvider() {
                             iconName = focused ? 'home' : 'home-outline';
                         } else if (route.name === 'Traducao') {
                             iconName = focused ? 'language' : 'language-outline';
+                        }else if (route.name === 'outras') {
+                            iconName = focused ? 'apps' : 'apps-outline';
                         }
 
                         
@@ -27,8 +30,9 @@ export default function RouterProvider() {
                 })}
                
             >
-                <Tab.Screen name="Home" options={{ title: 'Detencao de imagem' }} component={HomeScreen} />
+                <Tab.Screen name="Home" options={{ title: 'Detector de objecto' }} component={HomeScreen} />
                 <Tab.Screen name="Traducao" options={{ title:'Tradutor' }} component={TranslationScreen} />
+                <Tab.Screen name="outras" options={{ title:'Outras Ferramentas' }} component={OthersToolsScreen} />
             </Tab.Navigator>
         </NavigationContainer>
 

@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import RouterProvider from './src/router/RouterProvider';
+import { PaperProvider } from 'react-native-paper';
 
 export default function App() {
   const [translated, setTranslated]=useState();
@@ -11,7 +12,9 @@ export default function App() {
   },[])
 
   return (
-    <RouterProvider/>
+    <PaperProvider>
+      <RouterProvider/>
+    </PaperProvider>
   );
 }
 

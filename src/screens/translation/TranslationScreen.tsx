@@ -13,7 +13,7 @@ const TranslationScreen: React.FC<TranslationScreenProps> = () => {
     const [value, setValue] = useState(null);
     const [targetLanguage, setTargetLanguage] = useState([
         { label: 'ingles', value: 'en' },
-        { label: 'Frances', value: 'zh' }
+        { label: 'Frances', value: 'fr' }
     ]);
 
     const handleTranslate = () => {

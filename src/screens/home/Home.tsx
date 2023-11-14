@@ -6,15 +6,11 @@ import { StyleSheet, Text, View } from 'react-native';
 
 
 export default function HomeScreen(){
-    const [translated, setTranslated]=useState();
-    useEffect(()=>{
-   
-    },[])
+  
   
     return (
       <View style={styles.container}>
-        <Text>{JSON.stringify(translated)}</Text>
-        <StatusBar style="auto" />
+     
       </View>
     );
   }
