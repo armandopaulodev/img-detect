@@ -7,6 +7,7 @@ import { Divider } from 'react-native-paper';
 const ChatBotScreen = () => {
   const [inputText, setInputText] = useState('');
   const [chatResults, setChatResults] = useState<string[]>([]);
+  const [history, setHistory] = useState([]);
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleSendMessage = () => {
@@ -38,7 +39,8 @@ const ChatBotScreen = () => {
         axios
             .request(options)
             .then((response) => {
-                console.log(JSON.stringify(response.data.openai.generated_text))
+                // console.log(JSON.stringify(response.data.openai.generated_text))
+                setHistory(response.data)
                 setInputText('');
                 setChatResults((prevResults) => [...prevResults, `Bot: ${response.data.openai.generated_text}`]);
             })
