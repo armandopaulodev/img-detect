@@ -21,7 +21,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.armando_paulo.imgdetect"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +37,11 @@
           "photosPermission": "O app pretende aceder sua galeria."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "66bfa4f5-f684-41a8-8412-2c0e6a238d5b"
+      }
+    }
   }
 }
