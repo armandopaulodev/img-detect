@@ -68,7 +68,7 @@ export default function RouterProvider() {
                 }
             }>
                 <Stack.Screen name="casa" component={TabStack} options={{ headerShown: false }} />
-                <Stack.Screen name="img" component={ImageGenerator} options={{ title: 'Gerador de Imagens' }} />
+                <Stack.Screen name="img" component={ImageGenerator} options={{ title: 'Remover Fundo' }} />
                 <Stack.Screen name="chat" component={ChatBotScreen} options={{ title: 'Chat bot' }} />
                 <Stack.Screen name="code" component={ImageGenerator} options={{ title: 'Code bot' }} />
             </Stack.Navigator>

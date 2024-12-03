@@ -1,129 +1,141 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Image, View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+import { Button, Text, ActivityIndicator } from 'react-native-paper';
 import axios from 'axios';
-import { default as React, useRef, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ActivityIndicator, MD2Colors, TextInput } from 'react-native-paper';
 
-interface TranslationScreenProps { }
+const ImageGenerator = () => {
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-const ImageGenerator: React.FC<TranslationScreenProps> = () => {
-    const [inputText, setInputText] = useState<string>('');
-    const [img, setImg] = useState<string>('');
-    const [loading, setLoading] = useState<Boolean>(false);
-    const scrollViewRef = useRef<ScrollView>(null);
-    const [chatResults, setChatResults] = useState<string[]>([]);
+  // Select an image
+  const handleImagePick = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
 
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
 
+  // Process the selected image
+  const processImage = async () => {
+    if (!imageUri) return;
 
+    setLoading(true);
 
-    const handleTranslate = () => {
+    const formData = new FormData();
+    formData.append('providers', 'api4ai');
+    formData.append('file', {
+      uri: imageUri,
+      name: 'image.png',
+      type: 'image/png',
+    });
 
-        if (inputText.trim() !== '') {
-            setChatResults((prevResults) => [...prevResults, `Voce: ${inputText}`]);
-
-            setLoading(true);
-
-            const options = {
-                method: "POST",
-                url: "https://api.edenai.run/v2/image/generation",
-                headers: {
-                    authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNzI5YzUxZDItN2Q5Mi00NGJjLWJhMmUtNDE5YTQ5OWJiMTMxIiwidHlwZSI6ImFwaV90b2tlbiJ9.tUBopYrgHyPFkigL5s9_qhqmLKLj_7NOuvlDZOQt188",
-                },
-                data: {
-                    show_original_response: false,
-                    fallback_providers: "",
-                    providers: "openai",
-                    text: inputText,
-                    resolution: "512x512",
-                },
-            };
-
-            axios
-                .request(options)
-                .then((response) => {
-                    console.log(JSON.stringify(response.data.openai.items[0].image_resource_url))
-                    setImg(response.data.openai.items[0].image_resource_url);
-                    setLoading(false)
-                    setInputText('');
-                })
-                .catch((error) => {
-                    console.error(error);
-                    setLoading(false)
-                });
-
+    try {
+      const response = await axios.post(
+        'https://api.edenai.run/v2/image/background_removal',
+        formData,
+        {
+          headers: {
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNzI5YzUxZDItN2Q5Mi00NGJjLWJhMmUtNDE5YTQ5OWJiMTMxIiwidHlwZSI6ImFwaV90b2tlbiJ9.tUBopYrgHyPFkigL5s9_qhqmLKLj_7NOuvlDZOQt188',
+            'Content-Type': 'multipart/form-data',
+          },
         }
+      );
 
+      const imageUrl = response.data.api4ai.image_resource_url;
+      setProcessedImageUrl(imageUrl);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error processing image:', error);
+      alert('Failed to process the image.');
+      setLoading(false);
+    }
+  };
 
-    };
+  // Download the processed image
+  const downloadImage = async (imageUrl: string) => {
+    try {
+      const fileUri = `${FileSystem.documentDirectory}processed_image.png`;
+      const { uri } = await FileSystem.downloadAsync(imageUrl, fileUri);
+      alert('imagem baixada para ' + uri);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      alert('falha.');
+    }
+  };
 
-    return (
-        <View style={styles.container}>
-            <ScrollView
-                ref={scrollViewRef}
-                contentContainerStyle={styles.chatContainer}
-                showsVerticalScrollIndicator={false}
-            >
-                    {chatResults.map((result, index) => (
-                        <Text key={index} style={styles.chatText}>
-                            {result}
-                        </Text>
-                    ))}
-                <View style={{ marginTop: 10, backgroundColor: '#f8fafc', padding: 10, minHeight: 300 }}>
-                
-                    {loading ? <ActivityIndicator animating={true} color={MD2Colors.red800} size={'large'} /> :
-                        <Image source={{ uri: img != '' ? img : '#' }} style={{ width: 350, height: 350 }} />}
-                </View>
-            </ScrollView>
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Display the selected image */}
+      <View style={styles.imageContainer}>
+        {imageUri ? (
+          <Image source={{ uri: imageUri }} style={styles.image} />
+        ) : (
+          <Text>Seleccione uma imagem</Text>
+        )}
+      </View>
 
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    value={inputText}
-                    onChangeText={(text) => setInputText(text)}
-                    placeholder="Digite um commando..."
-                    multiline
-                />
-
-                <TouchableOpacity style={styles.sendButton} onPress={handleTranslate}>
-                    <MaterialIcons name="send" size={24} color="white" />
-                </TouchableOpacity>
-            </View>
+      {/* Display the processed image */}
+      {processedImageUrl && (
+        <View style={styles.imageContainer}>
+          <Text>IMagem processda:</Text>
+          <Image source={{ uri: processedImageUrl }} style={styles.image} />
         </View>
-    );
+      )}
+
+      {/* Buttons */}
+      <Button mode="contained" onPress={handleImagePick} style={styles.button}>
+        Carregar imagem 
+      </Button>
+
+      <Button
+        mode="contained"
+        onPress={processImage}
+        style={styles.button}
+        disabled={!imageUri || loading}
+      >
+        {loading ? <ActivityIndicator animating={true} /> : 'Processar Imagem'}
+      </Button>
+
+      {processedImageUrl && (
+        <Button
+          mode="contained"
+          onPress={() => downloadImage(processedImageUrl)}
+          style={styles.button}
+        >
+          Descarregar a imagem
+        </Button>
+      )}
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    chatContainer: {
-        padding: 16,
-    },
-    chatText: {
-        fontSize: 16,
-        marginBottom: 8,
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
-    },
-    input: {
-        flex: 1,
-        marginRight: 8,
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: 8,
-    },
-    sendButton: {
-        backgroundColor: '#f87171',
-        borderRadius: 20,
-        padding: 10,
-    },
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
+    padding: 16,
+  },
+  imageContainer: {
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  image: {
+    width: 250,
+    height: 250,
+    resizeMode: 'contain',
+  },
+  button: {
+    marginVertical: 8,
+    width: '90%',
+  },
 });
 
 export default ImageGenerator;

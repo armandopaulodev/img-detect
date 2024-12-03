@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Card, Title, Paragraph, IconButton } from 'react-native-paper';
 
 const toolsData = [
-  { title: 'Gerador de imagem', icon: 'image', route:'img' },
+  { title: 'Removedor de fundo', icon: 'image', route:'img' },
   { title: 'ChatBot', icon: 'chat', route:'chat' },
   { title: 'Greador de codigo', icon: 'code-tags', route:'code' },
   { title: 'Tradutor de ficheiro', icon: 'file', route:'code2' }
